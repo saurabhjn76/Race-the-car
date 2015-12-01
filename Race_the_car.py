@@ -125,12 +125,13 @@ def main():
 				mouseClicked=False
 		else:
 			playerx,playery=getPlayerPosition(mainBoard,playerChance)
+
 			if playerChance==1:
 				onumber=2
 			else:
 				onumber=1
 			oplayerx,oplayery=getPlayerPosition(mainBoard,onumber)
-				
+
 			if spotx!=oplayerx or spoty!=oplayery:
 				if spotx==playerx+1 and spoty==playery :
 					slideTo=LEFT
@@ -174,6 +175,7 @@ def main():
 				if spoty==playery+1 and spotx==playerx+1:
 					slideTo=JUPLEFT
 
+
 			#print slideTo
 			if  fenceClicked:
 				drawBoard(mainBoard,'Player '+ str(playerChance)+' put the fence')
@@ -192,9 +194,9 @@ def main():
 			elif  moveClicked:
 				drawBoard(mainBoard,'Player '+ str(playerChance)+' to move the car')
 				pygame.draw.rect(DISPLAYSURF,BLACK,MOVE_RECT,2)
-				if slideTo and not mouseClicked:
+				if slideTo and not mouseClicked and validateMove(mainBoard,spotx,spoty,playerChance):
 					drawHighlightTile(spotx,spoty,BLACK)
-				if slideTo and mouseClicked:
+				if slideTo and mouseClicked and validateMove(mainBoard,spotx,spoty,playerChance):
 					moveAnimation(mainBoard,slideTo,playerChance)
 					makeMove(mainBoard,slideTo,playerChance)
 					if playerChance==1:
@@ -543,10 +545,62 @@ def drawHighlightTile(tileX,tileY,highLightColor,tile_thickness=4):
 def gameWonAnimation():
 	color1=LIGHTBGCOLOR
 	color2=BGCOLOR
-
 	for i in range(13):
 		color1,color2=color2,color1
 		DISPLAYSURF.fill(color1)
+
+def validateMove(board,tileX,tileY,playerChance):
+	playerx,playery=getPlayerPosition(board,playerChance)
+	for position in TotalFence:
+		if position[0][0]==position[1][0]:
+			# equation x-position[0][0]
+			if position[0][1]>position[1][1]:
+				maxy=position[0][1]
+				miny=position[1][1]
+			else:
+				miny=position[0][1]
+				maxy=position[1][1]
+
+			if tileY<maxy and tileY>=miny and playery<maxy and playery>=miny:
+				if playerx<position[0][0]:
+					if (playerx-position[0][0])*(tileX-position[0][0]+0.1)<0:
+						return False # Invalid move
+				else:
+					if (playerx-position[0][0]-0.1)*(tileX-position[0][0]-0.1)<0:
+						return False # Invalid move
+	
+
+
+
+		if position[0][1]==position[1][1]:
+			#equation y-position[1][1]
+			if position[0][0]>position[1][0]:
+				maxx=position[0][0]
+				minx=position[1][0]
+			else:
+				minx=position[0][0]
+				maxx=position[1][0]
+			if tileX<maxx and tileX>=minx and playerx<maxx and playerx>=minx:
+				if playery<position[0][1]:
+					
+					if (playery-position[0][1])*(tileY-position[0][1]+0.1)<0:
+						return False
+				else:
+					if (playery-position[0][1]-0.1)*(tileY-position[0][1]-0.1)<0:
+						return False
+	# print playerx,playery
+	# print tileX,tileY
+	# print TotalFence
+	return True
+
+
+			
+# bugs 
+# still some fence can be jumped-fixed
+# L shaped - with slide to
+# invalid fence
+
+
 
 if __name__=='__main__':
 	main()
