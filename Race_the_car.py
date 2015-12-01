@@ -174,7 +174,7 @@ def main():
 			#print slideTo
 			if  fenceClicked:
 				drawBoard(mainBoard,'Player '+ str(playerChance)+' put the fence')
-				drawHighlightTile(spotx,spoty,HIGHLIGHTCOLOR,mousex,mousey)
+				drawFenceHighlight(spotx,spoty,HIGHLIGHTCOLOR,mousex,mousey)
 				pygame.draw.rect(DISPLAYSURF,BLACK,FENCE_RECT,2)
 				if mouseClicked:
 					if fencePutting(spotx,spoty,playerChance,mousex,mousey): 
@@ -189,6 +189,8 @@ def main():
 			elif  moveClicked:
 				drawBoard(mainBoard,'Player '+ str(playerChance)+' to move the car')
 				pygame.draw.rect(DISPLAYSURF,BLACK,MOVE_RECT,2)
+				if slideTo and not mouseClicked:
+					drawHighlightTile(spotx,spoty,BLACK)
 				if slideTo and mouseClicked:
 					moveAnimation(mainBoard,slideTo,playerChance)
 					makeMove(mainBoard,slideTo,playerChance)
@@ -273,9 +275,9 @@ def drawTile(tileX,tileY,number,adjx=0,adjy=0):
 			DISPLAYSURF.blit(carImg,textRect)
 
 	for position in player1Fence:
-		drawHighlightTile(position[0][0],position[0][1],BLACK,position[1][0],position[1][1],9)
+		drawFenceHighlight(position[0][0],position[0][1],BLACK,position[1][0],position[1][1],9)
 	for position in player2Fence:
-		drawHighlightTile(position[0][0],position[0][1],BLACK,position[1][0],position[1][1],9)
+		drawFenceHighlight(position[0][0],position[0][1],BLACK,position[1][0],position[1][1],9)
 	
 def getPlayerPosition(board,number):
 	# return the x,y co=ordinates of the blank box
@@ -353,7 +355,7 @@ def getSpotClicked(board,x,y):
 			if tileRect.collidepoint(x,y):
 				return (tileX,tileY)
 	return (None,None)
-def drawHighlightTile(tileX,tileY,highLightColor,mousex,mousey,fence_thickness=4):
+def drawFenceHighlight(tileX,tileY,highLightColor,mousex,mousey,fence_thickness=4):
 	left,top=getLeftTopOfTile(tileX,tileY)
 	Ox,Oy=getLeftTopOfTile(0,0)
 	if mousex>mousey and mousex+mousey<(top+left+TILESIZE):
@@ -493,6 +495,11 @@ def fencePutting(tileX,tileY,playerChance,mousex,mousey):
 		player2Fence.append(((tileX,tileY),(mousex,mousey)))
 		return True
 	return False
+def drawHighlightTile(tileX,tileY,highLightColor,tile_thickness=4):
+	# highlight the box where car may move based on mouse hover
+	left,top=getLeftTopOfTile(tileX,tileY)
+	pygame.draw.rect(DISPLAYSURF,highLightColor,(left-4,top-4,TILESIZE+5,TILESIZE+5),tile_thickness)
+
 if __name__=='__main__':
 	main()
 
