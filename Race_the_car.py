@@ -136,7 +136,7 @@ def main():
 					slideTo=DOWN
 				elif spotx==playerx and spoty==playery+1:
 					slideTo=UP
-					
+
 			if oplayerx==playerx+1 and oplayery==playery:
 				if  spotx==playerx+2 and spoty==playery:
 					slideTo=JLEFTLEFT
@@ -276,18 +276,36 @@ def makeMove(board,move,number):
 		board[playerx][playery],board[playerx-1][playery]=board[playerx-1][playery],board[playerx][playery]
 	elif move==LEFT:
 		board[playerx][playery],board[playerx+1][playery]=board[playerx+1][playery],board[playerx][playery]
+
 	elif move==JUPUP:
 		board[playerx][playery],board[playerx][playery+2]=board[playerx][playery+2],board[playerx][playery]
 	elif move==JUPLEFT:
-		board[playerx][playery],board[playerx][playery+2]=board[playerx][playery+2],board[playerx][playery]
+		board[playerx][playery],board[playerx+1][playery+1]=board[playerx+1][playery+1],board[playerx][playery]
 	elif move==JUPRIGHT:
-		board[playerx][playery],board[playerx][playery+2]=board[playerx][playery+2],board[playerx][playery]
+		board[playerx][playery],board[playerx-1][playery+1]=board[playerx-1][playery+1],board[playerx][playery]
+
 	elif move==JDOWNDOWN:
 		board[playerx][playery],board[playerx][playery-2]=board[playerx][playery-2],board[playerx][playery]
+	elif move==JDOWNLEFT:
+		board[playerx][playery],board[playerx+1][playery-1]=board[playerx+1][playery-1],board[playerx][playery]
+	elif move==JDOWNRIGHT:
+		board[playerx][playery],board[playerx-1][playery-1]=board[playerx-1][playery-1],board[playerx][playery]
+
+
 	elif move==JRIGHTRIGHT:
 		board[playerx][playery],board[playerx-2][playery]=board[playerx-2][playery],board[playerx][playery]
+	elif move==JRIGHTUP:
+		board[playerx][playery],board[playerx-1][playery+1]=board[playerx-1][playery+1],board[playerx][playery]
+	elif move==JRIGHTDOWN:
+		board[playerx][playery],board[playerx-1][playery-1]=board[playerx-1][playery-1],board[playerx][playery]
+
 	elif move==JLEFTLEFT:
 		board[playerx][playery],board[playerx+2][playery]=board[playerx+2][playery],board[playerx][playery]
+	elif move==JLEFTUP:
+		board[playerx][playery],board[playerx+1][playery+1]=board[playerx+1][playery+1],board[playerx][playery]
+	elif move==JLEFTDOWN:
+		board[playerx][playery],board[playerx+1][playery-1]=board[playerx+1][playery-1],board[playerx][playery]
+		
 	
 def drawBoard(board,message):
 	DISPLAYSURF.fill(BGCOLOR)
@@ -347,45 +365,86 @@ def makeText(text,color,bgcolor,top,left):
 	textRect=textSurf.get_rect()
 	textRect.topleft=(top,left)
 	return (textSurf,textRect)
-def moveAnimation(board,direction,number,message=''):
+def moveAnimation(board,direction,number,message='',jx=0,jy=0):
 	playerx,playery=getPlayerPosition(board,number)
 	drawBoard(board,message)
 	baseSurf=DISPLAYSURF.copy() 
 	# Drawing a base surface for temporary movement
 	moveLeft,moveTop=getLeftTopOfTile(playerx,playery)
 	pygame.draw.rect(baseSurf,TILECOLOR,(moveLeft,moveTop,TILESIZE-2,TILESIZE-4))
-	if direction in [JUP,JDOWN,JLEFT,JRIGHT]:
-		a=2*TILESIZE
-	else:
-		a=TILESIZE
-	for i in range(0,a,ANIMATIONSPEED):
+	# checking for jump conditions
+	if direction==JUPUP:
+		moveAnimation(board,UP,number)
+		moveAnimation(board,UP,number,'',0,1)
+	if direction==JUPRIGHT:
+		moveAnimation(board,UP,number)
+		moveAnimation(board,RIGHT,number,'',0,1)
+	if direction==JUPLEFT:
+		moveAnimation(board,UP,number)
+		moveAnimation(board,LEFT,number,'',0,1)
+
+	if direction==JDOWNDOWN:
+		moveAnimation(board,DOWN,number)
+		moveAnimation(board,DOWN,number,'',0,-1)
+	if direction==JDOWNLEFT:
+		moveAnimation(board,DOWN,number)
+		moveAnimation(board,LEFT,number,'',0,-1)
+	if direction==JDOWNRIGHT:
+		moveAnimation(board,DOWN,number)
+		moveAnimation(board,RIGHT,number,'',0,-1)
+		
+	if direction==JRIGHTRIGHT:
+		moveAnimation(board,RIGHT,number)
+		moveAnimation(board,RIGHT,number,'',-1,0)
+	if direction==JRIGHTUP:
+		moveAnimation(board,RIGHT,number)
+		moveAnimation(board,UP,number,'',-1,0)
+	if direction==JRIGHTDOWN:
+		moveAnimation(board,RIGHT,number)
+		moveAnimation(board,DOWN,number,'',-1,0)
+
+	if direction==JLEFTLEFT:
+		moveAnimation(board,LEFT,number)
+		moveAnimation(board,LEFT,number,'',1,0)
+	if direction==JLEFTUP:
+		moveAnimation(board,LEFT,number)
+		moveAnimation(board,UP,number,'',1,0)
+	if direction==JLEFTDOWN:
+		moveAnimation(board,LEFT,number)
+		moveAnimation(board,DOWN,number,'',1,0)
+
+		# for double animation if required 
+	moveLeft,moveTop=getLeftTopOfTile(playerx+jx,playery+jy)
+
+
+
+	for i in range(0,TILESIZE,ANIMATIONSPEED):
 		checkForQuit()
 		DISPLAYSURF.blit(baseSurf,(0,0))
-
 		if number==1:
-			if direction==UP or direction==JUP:
+			if direction==UP:
 				#drawTile(movex,movey,board[movex][movey],0,-i)
 				DISPLAYSURF.blit(carImg,(moveLeft,moveTop+i))
-			if direction==DOWN or direction==JDOWN:
+			if direction==DOWN:
 				#drawTile(movex,movey,board[movex][movey],0,i)
 				DISPLAYSURF.blit(carImg,(moveLeft,moveTop-i))
-			if direction==RIGHT or direction==JRIGHT:
+			if direction==RIGHT:
 				#drawTile(movex,movey,board[movex][movey],i,0)
 				DISPLAYSURF.blit(carImg,(moveLeft-i,moveTop))
-			if direction==LEFT or direction==JLEFT:
+			if direction==LEFT:
 				#drawTile(movex,movey,board[movex][movey],-i,0)
 				DISPLAYSURF.blit(carImg,(moveLeft+i,moveTop))
 		else:
-			if direction==UP or direction==JUP:
+			if direction==UP:
 				#drawTile(movex,movey,board[movex][movey],0,-i)
 				DISPLAYSURF.blit(carImg1,(moveLeft,moveTop+i))
-			if direction==DOWN or direction==JDOWN:
+			if direction==DOWN:
 				#drawTile(movex,movey,board[movex][movey],0,i)
 				DISPLAYSURF.blit(carImg1,(moveLeft,moveTop-i))
-			if direction==RIGHT or direction==JRIGHT:
+			if direction==RIGHT:
 				#drawTile(movex,movey,board[movex][movey],i,0)
 				DISPLAYSURF.blit(carImg1,(moveLeft-i,moveTop))
-			if direction==LEFT or direction==JLEFT:
+			if direction==LEFT:
 				#drawTile(movex,movey,board[movex][movey],-i,0)
 				DISPLAYSURF.blit(carImg1,(moveLeft+i,moveTop))
 
