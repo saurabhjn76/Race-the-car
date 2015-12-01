@@ -72,6 +72,7 @@ carImg1=pygame.image.load('car_22.png')
 
 player1Fence=[] # records the position of the fences by player1
 player2Fence=[] # records the position of the fences by player2
+TotalFence=[]# recors the co-ordinates of all fences
 
 
 def main():
@@ -129,6 +130,7 @@ def main():
 			else:
 				onumber=1
 			oplayerx,oplayery=getPlayerPosition(mainBoard,onumber)
+				
 			if spotx!=oplayerx or spoty!=oplayery:
 				if spotx==playerx+1 and spoty==playery :
 					slideTo=LEFT
@@ -154,7 +156,7 @@ def main():
 					slideTo=JRIGHTDOWN
 				if spotx==playerx-1 and spoty==playery+1:
 					slideTo=JRIGHTUP
-				
+					
 			elif oplayerx==playerx and oplayery==playery-1:
 				if spotx==playerx and spoty==playery-2:
 					slideTo=JDOWNDOWN
@@ -250,7 +252,7 @@ def hasWon(board):
 		terminate()
 	elif board[BOARDWIDTH-int(BOARDWIDTH/2)-1][BOARDHEIGHT-1]==2:
 		#player 2 has won show it and exit
-		#player 1 has won show it and exit
+		
 		for i in range(13):
 			color1,color2=color2,color1
 			drawBoard(board,'Player 2 has won',color1)
@@ -504,6 +506,29 @@ def fencePutting(tileX,tileY,playerChance,mousex,mousey):
 	if mousex<mousey and mousex+mousey>(top+left+TILESIZE) and top<Oy+6*TILESIZE:
 		flag=1
 
+	if mousex>mousey and mousex+mousey<(top+left+TILESIZE):
+		if left<=Ox+6*TILESIZE and top!=Oy:
+			TotalFence.append(((tileX,tileY),(tileX+2,tileY)))
+		elif left>Ox+6*TILESIZE and top!=Oy:
+			TotalFence.append(((5,tileY),(7,tileY)))
+
+	elif mousex>mousey and mousex+mousey>(top+left+TILESIZE):
+		if top<=Oy+6*TILESIZE and left<Ox+6*TILESIZE:
+			TotalFence.append(((tileX+1,tileY),(tileX+1,tileY+2)))
+		elif top>Oy+6*TILESIZE and left<Ox+6*TILESIZE:
+			TotalFence.append(((tileX+1,5),(tileX+1,7)))
+
+	elif mousex<mousey and mousex+mousey<(top+left+TILESIZE):
+		if top<=Oy+6*TILESIZE and left!=Ox:
+			TotalFence.append(((tileX,tileY),(tileX,tileY+2)))
+		elif top>Oy+6*TILESIZE and left!=Ox:
+			TotalFence.append(((tileX,5),(tileX,5+2)))
+
+	elif mousex<mousey and mousex+mousey>(top+left+TILESIZE):
+		if left<=Ox+6*TILESIZE and top<Oy+6*TILESIZE:
+			TotalFence.append(((tileX,tileY+1),(tileX+2,tileY+1)))
+		elif left>Ox+6*TILESIZE and top<Oy+6*TILESIZE:
+			TotalFence.append(((5,tileY+1),(7,tileY+1)))
 	if playerChance==1 and flag==1:
 		player1Fence.append(((tileX,tileY),(mousex,mousey)))
 		return True
