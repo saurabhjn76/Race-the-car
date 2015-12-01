@@ -403,42 +403,54 @@ def moveAnimation(board,direction,number,message='',jx=0,jy=0):
 	if direction==JUPUP:
 		moveAnimation(board,UP,number)
 		moveAnimation(board,UP,number,'',0,1)
+		return
 	elif direction==JUPRIGHT:
 		moveAnimation(board,UP,number)
 		moveAnimation(board,RIGHT,number,'',0,1)
+		return
 	elif direction==JUPLEFT:
 		moveAnimation(board,UP,number)
 		moveAnimation(board,LEFT,number,'',0,1)
+		return
 
 	elif direction==JDOWNDOWN:
 		moveAnimation(board,DOWN,number)
 		moveAnimation(board,DOWN,number,'',0,-1)
+		return
 	elif direction==JDOWNLEFT:
 		moveAnimation(board,DOWN,number)
 		moveAnimation(board,LEFT,number,'',0,-1)
+		return
 	elif direction==JDOWNRIGHT:
 		moveAnimation(board,DOWN,number)
 		moveAnimation(board,RIGHT,number,'',0,-1)
+		return
 		
 	elif direction==JRIGHTRIGHT:
 		moveAnimation(board,RIGHT,number)
 		moveAnimation(board,RIGHT,number,'',-1,0)
+		return
 	elif direction==JRIGHTUP:
 		moveAnimation(board,RIGHT,number)
 		moveAnimation(board,UP,number,'',-1,0)
+		return
 	elif direction==JRIGHTDOWN:
 		moveAnimation(board,RIGHT,number)
 		moveAnimation(board,DOWN,number,'',-1,0)
+		return
 
 	elif direction==JLEFTLEFT:
 		moveAnimation(board,LEFT,number)
 		moveAnimation(board,LEFT,number,'',1,0)
+		return
 	elif direction==JLEFTUP:
 		moveAnimation(board,LEFT,number)
 		moveAnimation(board,UP,number,'',1,0)
+		return
 	elif direction==JLEFTDOWN:
 		moveAnimation(board,LEFT,number)
 		moveAnimation(board,DOWN,number,'',1,0)
+		return
 
 		drawBoard(board)
 		# for double animation if required 
