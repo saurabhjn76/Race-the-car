@@ -39,6 +39,7 @@ BOARDCOLOR=NAVYBLUE
 BASICFONTSIZE=20
 BORDERCOLOR=BLACK
 HIGHLIGHTCOLOR=BLUE
+LIGHTBGCOLOR=BRIGHTBLUE
 
 BUTTONTEXTCOLOR=BLACK
 BUTTONCOLOR=WHITE
@@ -237,22 +238,25 @@ def getStartingBoard():
 	return board 
 def hasWon(board):
 	# checks for winning player
+	color1=LIGHTBGCOLOR
+	color2=BGCOLOR
 	if board[BOARDWIDTH-int(BOARDWIDTH/2)-1][0]==1:
 		#player 1 has won show it and exit
-		drawBoard(board,'Player 1 has won')
-		pygame.display.update()
-		FPSCLOCK.tick(FPS)
-		pygame.time.wait(5000)
-		pygame.quit()
-		sys.exit()
+		for i in range(13):
+			color1,color2=color2,color1
+			drawBoard(board,'Player 1 has won',color1)
+			pygame.display.update()
+			pygame.time.wait(500)
+		terminate()
 	elif board[BOARDWIDTH-int(BOARDWIDTH/2)-1][BOARDHEIGHT-1]==2:
 		#player 2 has won show it and exit
-		drawBoard(board,'Player 2 has won')
-		pygame.display.update()
-		FPSCLOCK.tick(FPS)
-		pygame.time.wait(5000)
-		pygame.quit()
-		sys.exit()
+		#player 1 has won show it and exit
+		for i in range(13):
+			color1,color2=color2,color1
+			drawBoard(board,'Player 2 has won',color1)
+			pygame.display.update()
+			pygame.time.wait(500)
+		terminate()
 def drawTile(tileX,tileY,number,adjx=0,adjy=0):
 	# draw a tile at tileX ad tileY
 	# pixels over determined by adjx and adjy
@@ -330,10 +334,10 @@ def makeMove(board,move,number):
 	FPSCLOCK.tick(FPS)
 		
 	
-def drawBoard(board,message):
-	DISPLAYSURF.fill(BGCOLOR)
+def drawBoard(board,message,color1=BGCOLOR):
+	DISPLAYSURF.fill(color1)
 	if message:
-	 	textSurf,textRect=makeText(message,MESSAGECOLOR,BGCOLOR,5,5)
+	 	textSurf,textRect=makeText(message,MESSAGECOLOR,color1,5,5)
 	 	DISPLAYSURF.blit(textSurf,textRect)
 	for tilex in range(len(board)):
 		for tiley in range(len(board[0])):
@@ -499,6 +503,13 @@ def drawHighlightTile(tileX,tileY,highLightColor,tile_thickness=4):
 	# highlight the box where car may move based on mouse hover
 	left,top=getLeftTopOfTile(tileX,tileY)
 	pygame.draw.rect(DISPLAYSURF,highLightColor,(left-4,top-4,TILESIZE+5,TILESIZE+5),tile_thickness)
+def gameWonAnimation():
+	color1=LIGHTBGCOLOR
+	color2=BGCOLOR
+
+	for i in range(13):
+		color1,color2=color2,color1
+		DISPLAYSURF.fill(color1)
 
 if __name__=='__main__':
 	main()
