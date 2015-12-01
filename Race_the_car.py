@@ -98,6 +98,7 @@ def main():
 		msg='Player turn-> ' + str(playerChance) 
 		mouseClicked=False
 		drawBoard(mainBoard,msg)
+		hasWon(mainBoard)
 		DISPLAYSURF.blit(textSurfaceObj,textRectObj)
 		for event in pygame.event.get():
 			if event.type==QUIT or(event.type==KEYUP and event.key==K_ESCAPE):
@@ -232,6 +233,24 @@ def getStartingBoard():
 	board[BOARDWIDTH-int(BOARDWIDTH/2)-1][0]=2
 	board[BOARDWIDTH-int(BOARDWIDTH/2)-1][BOARDHEIGHT-1]=1
 	return board 
+def hasWon(board):
+	# checks for winning player
+	if board[BOARDWIDTH-int(BOARDWIDTH/2)-1][0]==1:
+		#player 1 has won show it and exit
+		drawBoard(board,'Player 1 has won')
+		pygame.display.update()
+		FPSCLOCK.tick(FPS)
+		pygame.time.wait(5000)
+		pygame.quit()
+		sys.exit()
+	elif board[BOARDWIDTH-int(BOARDWIDTH/2)-1][BOARDHEIGHT-1]==2:
+		#player 2 has won show it and exit
+		drawBoard(board,'Player 2 has won')
+		pygame.display.update()
+		FPSCLOCK.tick(FPS)
+		pygame.time.wait(5000)
+		pygame.quit()
+		sys.exit()
 def drawTile(tileX,tileY,number,adjx=0,adjy=0):
 	# draw a tile at tileX ad tileY
 	# pixels over determined by adjx and adjy
@@ -305,6 +324,8 @@ def makeMove(board,move,number):
 		board[playerx][playery],board[playerx+1][playery+1]=board[playerx+1][playery+1],board[playerx][playery]
 	elif move==JLEFTDOWN:
 		board[playerx][playery],board[playerx+1][playery-1]=board[playerx+1][playery-1],board[playerx][playery]
+	pygame.display.update()
+	FPSCLOCK.tick(FPS)
 		
 	
 def drawBoard(board,message):
@@ -376,43 +397,44 @@ def moveAnimation(board,direction,number,message='',jx=0,jy=0):
 	if direction==JUPUP:
 		moveAnimation(board,UP,number)
 		moveAnimation(board,UP,number,'',0,1)
-	if direction==JUPRIGHT:
+	elif direction==JUPRIGHT:
 		moveAnimation(board,UP,number)
 		moveAnimation(board,RIGHT,number,'',0,1)
-	if direction==JUPLEFT:
+	elif direction==JUPLEFT:
 		moveAnimation(board,UP,number)
 		moveAnimation(board,LEFT,number,'',0,1)
 
-	if direction==JDOWNDOWN:
+	elif direction==JDOWNDOWN:
 		moveAnimation(board,DOWN,number)
 		moveAnimation(board,DOWN,number,'',0,-1)
-	if direction==JDOWNLEFT:
+	elif direction==JDOWNLEFT:
 		moveAnimation(board,DOWN,number)
 		moveAnimation(board,LEFT,number,'',0,-1)
-	if direction==JDOWNRIGHT:
+	elif direction==JDOWNRIGHT:
 		moveAnimation(board,DOWN,number)
 		moveAnimation(board,RIGHT,number,'',0,-1)
 		
-	if direction==JRIGHTRIGHT:
+	elif direction==JRIGHTRIGHT:
 		moveAnimation(board,RIGHT,number)
 		moveAnimation(board,RIGHT,number,'',-1,0)
-	if direction==JRIGHTUP:
+	elif direction==JRIGHTUP:
 		moveAnimation(board,RIGHT,number)
 		moveAnimation(board,UP,number,'',-1,0)
-	if direction==JRIGHTDOWN:
+	elif direction==JRIGHTDOWN:
 		moveAnimation(board,RIGHT,number)
 		moveAnimation(board,DOWN,number,'',-1,0)
 
-	if direction==JLEFTLEFT:
+	elif direction==JLEFTLEFT:
 		moveAnimation(board,LEFT,number)
 		moveAnimation(board,LEFT,number,'',1,0)
-	if direction==JLEFTUP:
+	elif direction==JLEFTUP:
 		moveAnimation(board,LEFT,number)
 		moveAnimation(board,UP,number,'',1,0)
-	if direction==JLEFTDOWN:
+	elif direction==JLEFTDOWN:
 		moveAnimation(board,LEFT,number)
 		moveAnimation(board,DOWN,number,'',1,0)
 
+		drawBoard(board)
 		# for double animation if required 
 	moveLeft,moveTop=getLeftTopOfTile(playerx+jx,playery+jy)
 
@@ -425,29 +447,28 @@ def moveAnimation(board,direction,number,message='',jx=0,jy=0):
 			if direction==UP:
 				#drawTile(movex,movey,board[movex][movey],0,-i)
 				DISPLAYSURF.blit(carImg,(moveLeft,moveTop+i))
-			if direction==DOWN:
+			elif direction==DOWN:
 				#drawTile(movex,movey,board[movex][movey],0,i)
 				DISPLAYSURF.blit(carImg,(moveLeft,moveTop-i))
-			if direction==RIGHT:
+			elif direction==RIGHT:
 				#drawTile(movex,movey,board[movex][movey],i,0)
 				DISPLAYSURF.blit(carImg,(moveLeft-i,moveTop))
-			if direction==LEFT:
+			elif direction==LEFT:
 				#drawTile(movex,movey,board[movex][movey],-i,0)
 				DISPLAYSURF.blit(carImg,(moveLeft+i,moveTop))
 		else:
 			if direction==UP:
 				#drawTile(movex,movey,board[movex][movey],0,-i)
 				DISPLAYSURF.blit(carImg1,(moveLeft,moveTop+i))
-			if direction==DOWN:
+			elif direction==DOWN:
 				#drawTile(movex,movey,board[movex][movey],0,i)
 				DISPLAYSURF.blit(carImg1,(moveLeft,moveTop-i))
-			if direction==RIGHT:
+			elif direction==RIGHT:
 				#drawTile(movex,movey,board[movex][movey],i,0)
 				DISPLAYSURF.blit(carImg1,(moveLeft-i,moveTop))
-			if direction==LEFT:
+			elif direction==LEFT:
 				#drawTile(movex,movey,board[movex][movey],-i,0)
-				DISPLAYSURF.blit(carImg1,(moveLeft+i,moveTop))
-
+				DISPLAYSURF.blit(carImg1,(moveLeft+i,moveTop))	
 		pygame.display.update()
 		FPSCLOCK.tick(FPS)
 
