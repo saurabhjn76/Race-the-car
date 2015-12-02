@@ -194,9 +194,9 @@ def main():
 			elif  moveClicked:
 				drawBoard(mainBoard,'Player '+ str(playerChance)+' to move the car')
 				pygame.draw.rect(DISPLAYSURF,BLACK,MOVE_RECT,2)
-				if slideTo and not mouseClicked and validateMove(mainBoard,spotx,spoty,playerChance):
+				if slideTo and not mouseClicked and validateMove(mainBoard,spotx,spoty,playerChance,slideTo):
 					drawHighlightTile(spotx,spoty,BLACK)
-				if slideTo and mouseClicked and validateMove(mainBoard,spotx,spoty,playerChance):
+				if slideTo and mouseClicked and validateMove(mainBoard,spotx,spoty,playerChance,slideTo):
 					moveAnimation(mainBoard,slideTo,playerChance)
 					makeMove(mainBoard,slideTo,playerChance)
 					if playerChance==1:
@@ -549,8 +549,13 @@ def gameWonAnimation():
 		color1,color2=color2,color1
 		DISPLAYSURF.fill(color1)
 
-def validateMove(board,tileX,tileY,playerChance):
+def validateMove(board,tileX,tileY,playerChance,direction):
 	playerx,playery=getPlayerPosition(board,playerChance)
+	if playerChance==1:
+		onumber=2
+	else:
+		onumber=1
+	oplayerx,oplayery=getPlayerPosition(board,onumber)
 	for position in TotalFence:
 		if position[0][0]==position[1][0]:
 			# equation x-position[0][0]
@@ -594,14 +599,32 @@ def validateMove(board,tileX,tileY,playerChance):
 				else:
 					if (playery-position[0][1]-0.1)*(tileY-position[0][1]+0.1)<0:
 						return False
+	if direction==JUPRIGHT:
+		return validateMove(board,playerx,playery+1,playerChance,UP) and validateMove(board,tileX,tileY,onumber,RIGHT)
+
+	if direction==JUPLEFT:
+		return validateMove(board,playerx,playery+1,playerChance,UP) and validateMove(board,tileX,tileY,onumber,LEFT)
+
+	if direction==JDOWNLEFT:
+		return validateMove(board,playerx,playery-1,playerChance,DOWN) and validateMove(board,tileX,tileY,onumber,LEFT)
+
+	if direction==JDOWNRIGHT:
+		return validateMove(board,playerx,playery-1,playerChance,DOWN) and validateMove(board,tileX,tileY,onumber,RIGHT)
+	if direction==JRIGHTUP:
+		return validateMove(board,playerx-1,playery,playerChance,RIGHT) and validateMove(board,tileX,tileY,onumber,UP)
+	if direction==JRIGHTDOWN:
+		return validateMove(board,playerx-1,playery,playerChance,RIGHT) and validateMove(board,tileX,tileY,onumber,DOWN)
+	if direction==JLEFTUP:
+		return validateMove(board,playerx+1,playery,playerChance,RIGHT) and validateMove(board,tileX,tileY,onumber,UP)
+	if direction==JLEFTDOWN:
+		return validateMove(board,playerx+1,playery,playerChance,RIGHT) and validateMove(board,tileX,tileY,onumber,DOWN)
 	return True
 
 
 			
 # bugs 
-# still some fence can be jumped-fixed
-# L shaped - with slide to
 # invalid fence
+#fence count
 
 
 
