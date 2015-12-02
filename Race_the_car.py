@@ -186,11 +186,14 @@ def main():
 					pygame.draw.rect(DISPLAYSURF,BLACK,FENCE_RECT,2)
 					if mouseClicked:
 						if fencePutting(spotx,spoty,playerChance,mousex,mousey): 
-							if playerChance==1:
-								playerChance=2
-							elif playerChance==2:
-								playerChance=1
-							fenceClicked=False
+							if validateFence(mainBoard,playerChance,playerx,playery)and validateFence(mainBoard,onumber,oplayerx,oplayery):	
+								if playerChance==1:
+									playerChance=2
+								elif playerChance==2:
+									playerChance=1
+								fenceClicked=False
+							else:
+								hasWon(mainBoard,onumber)
 				else:
 					drawBoard(mainBoard,'Player : '+ str(playerChance)+ " , No more fences available please make a move")
 
@@ -233,9 +236,9 @@ def getLeftTopOfTile(tileX,tileY):
 	left=XMARGIN+(tileX*TILESIZE)+(tileX-1)
 	top=YMARGIN+(tileY*TILESIZE)+(tileY-1)
 	return(left,top)
-def getStartingBoard():
+def getStartingBoard(state=3):
 	# Returns the board data structure with tiles in it
-	state=3
+	
 	board=[]
 	for x in range(BOARDWIDTH):
 		column=[]
@@ -245,11 +248,11 @@ def getStartingBoard():
 	board[BOARDWIDTH-int(BOARDWIDTH/2)-1][0]=2
 	board[BOARDWIDTH-int(BOARDWIDTH/2)-1][BOARDHEIGHT-1]=1
 	return board 
-def hasWon(board):
+def hasWon(board,playerwon=-1):
 	# checks for winning player
 	color1=LIGHTBGCOLOR
 	color2=BGCOLOR
-	if board[BOARDWIDTH-int(BOARDWIDTH/2)-1][0]==1:
+	if board[BOARDWIDTH-int(BOARDWIDTH/2)-1][0]==1 or playerwon==1:
 		#player 1 has won show it and exit
 		for i in range(13):
 			color1,color2=color2,color1
@@ -257,7 +260,7 @@ def hasWon(board):
 			pygame.display.update()
 			pygame.time.wait(500)
 		terminate()
-	elif board[BOARDWIDTH-int(BOARDWIDTH/2)-1][BOARDHEIGHT-1]==2:
+	elif board[BOARDWIDTH-int(BOARDWIDTH/2)-1][BOARDHEIGHT-1]==2 or playerwon==2:
 		#player 2 has won show it and exit
 		
 		for i in range(13):
@@ -554,13 +557,14 @@ def gameWonAnimation():
 		color1,color2=color2,color1
 		DISPLAYSURF.fill(color1)
 
-def validateMove(board,tileX,tileY,playerChance,direction):
-	playerx,playery=getPlayerPosition(board,playerChance)
-	if playerChance==1:
-		onumber=2
-	else:
-		onumber=1
-	oplayerx,oplayery=getPlayerPosition(board,onumber)
+def validateMove(board,tileX,tileY,playerChance,direction,playerx=-1,playery=-1):
+	if playerx==-1: # no parameter recieved, initialize to actual parameter
+		playerx,playery=getPlayerPosition(board,playerChance)
+		if playerChance==1:
+			onumber=2
+		else:
+			onumber=1
+		oplayerx,oplayery=getPlayerPosition(board,onumber)
 	for position in TotalFence:
 		if position[0][0]==position[1][0]:
 			# equation x-position[0][0]
@@ -627,16 +631,66 @@ def validateMove(board,tileX,tileY,playerChance,direction):
 	return True
 
 def fenceRemainingCount(playerChance):
+	'''
+	returns the number of fence remainning for the respective player
+	'''
 	if playerChance==1:
 		return FENCELIMIT-len(player1Fence)
 	else:
 		return FENCELIMIT-len(player2Fence)
-# def validateFence(board):
-# 	print "sdsa"
+def validateFence(board,playerChance,startx,starty):
+	'''
+	checks whether the fence is valid or not
+	'''
+
+	if playerChance==1: 
+		finalx=(BOARDWIDTH-int(BOARDWIDTH/2)-1)
+		finaly=0
+	else:
+		finalx=(BOARDWIDTH-int(BOARDWIDTH/2)-1)
+		finaly=BOARDHEIGHT-1
+
+
+	duplicateBoard=getStartingBoard(0)
+	duplicateBoard[(BOARDWIDTH-int(BOARDWIDTH/2)-1)][0]=0
+	duplicateBoard[(BOARDWIDTH-int(BOARDWIDTH/2)-1)][BOARDHEIGHT-1]=0  # getting board with all zeroes
+
+
+	start=(startx,starty)
+	final=(finalx,finaly)
+
+	s=[start]
+	while s:
+		current=s.pop()
+		if current==final:
+			return True
+			while s:
+				s.pop() # to end the loop
+		elif duplicateBoard[current[0]][current[1]]==0:
+			duplicateBoard[current[0]][current[1]]=1
+			if current[0]-1>=0 and validateMove(board,current[0]-1,current[1],playerChance,RIGHT,current[0],current[1]) and duplicateBoard[current[0]-1][current[1]]==0:
+				s=s+[(current[0]-1,current[1])]
+			if current[0]+1 < BOARDWIDTH and validateMove(board,current[0]+1,current[1],playerChance,LEFT,current[0],current[1]) and duplicateBoard[current[0]+1][current[1]]==0:
+				s=s+[(current[0]+1,current[1])]
+			if current[1]-1>=0 and validateMove(board,current[0],current[1]-1,playerChance,DOWN,current[0],current[1]) and duplicateBoard[current[0]][current[1]-1]==0:
+				s=s+[(current[0],current[1]-1)]
+			if current[1]+1 < BOARDHEIGHT and validateMove(board,current[0],current[1]+1,playerChance,UP,current[0],current[1]) and duplicateBoard[current[0]][current[1]+1]==0:
+				s=s+[(current[0],current[1]+1)]	
+	return False
+
+
+
+
+
+
+
+
+
+	
+
 
 # bugs 
 # invalid fence
-#fence count
 
 
 
