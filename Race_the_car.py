@@ -70,6 +70,8 @@ JRIGHTDOWN='jumprightdown'
 carImg=pygame.image.load('car_11.png')
 carImg1=pygame.image.load('car_22.png')
 
+FENCELIMIT=8 # The maximum numbr of fences a player can use
+
 player1Fence=[] # records the position of the fences by player1
 player2Fence=[] # records the position of the fences by player2
 TotalFence=[]# recors the co-ordinates of all fences
@@ -178,16 +180,19 @@ def main():
 
 			#print slideTo
 			if  fenceClicked:
-				drawBoard(mainBoard,'Player '+ str(playerChance)+' put the fence')
-				drawFenceHighlight(spotx,spoty,HIGHLIGHTCOLOR,mousex,mousey)
-				pygame.draw.rect(DISPLAYSURF,BLACK,FENCE_RECT,2)
-				if mouseClicked:
-					if fencePutting(spotx,spoty,playerChance,mousex,mousey): 
-						if playerChance==1:
-							playerChance=2
-						elif playerChance==2:
-							playerChance=1
-						fenceClicked=False
+				if fenceRemainingCount(playerChance)>0:
+					drawBoard(mainBoard,'Player : '+ str(playerChance)+ " , Remaining fences : " +str(fenceRemainingCount(playerChance)))
+					drawFenceHighlight(spotx,spoty,HIGHLIGHTCOLOR,mousex,mousey)
+					pygame.draw.rect(DISPLAYSURF,BLACK,FENCE_RECT,2)
+					if mouseClicked:
+						if fencePutting(spotx,spoty,playerChance,mousex,mousey): 
+							if playerChance==1:
+								playerChance=2
+							elif playerChance==2:
+								playerChance=1
+							fenceClicked=False
+				else:
+					drawBoard(mainBoard,'Player : '+ str(playerChance)+ " , No more fences available please make a move")
 
 
 				#tile pressed
@@ -599,6 +604,7 @@ def validateMove(board,tileX,tileY,playerChance,direction):
 				else:
 					if (playery-position[0][1]-0.1)*(tileY-position[0][1]+0.1)<0:
 						return False
+	# In case of jump fence should not be crossed
 	if direction==JUPRIGHT:
 		return validateMove(board,playerx,playery+1,playerChance,UP) and validateMove(board,tileX,tileY,onumber,RIGHT)
 
@@ -620,8 +626,14 @@ def validateMove(board,tileX,tileY,playerChance,direction):
 		return validateMove(board,playerx+1,playery,playerChance,RIGHT) and validateMove(board,tileX,tileY,onumber,DOWN)
 	return True
 
+def fenceRemainingCount(playerChance):
+	if playerChance==1:
+		return FENCELIMIT-len(player1Fence)
+	else:
+		return FENCELIMIT-len(player2Fence)
+# def validateFence(board):
+# 	print "sdsa"
 
-			
 # bugs 
 # invalid fence
 #fence count
