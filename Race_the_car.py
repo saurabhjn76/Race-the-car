@@ -565,8 +565,11 @@ def validateMove(board,tileX,tileY,playerChance):
 				if playerx<position[0][0]:
 					if (playerx-position[0][0])*(tileX-position[0][0]+0.1)<0:
 						return False # Invalid move
+				elif playerx==position[0][0]:
+					if (playerx-position[0][0]+0.1)*(tileX-position[0][0])<0:
+						return False
 				else:
-					if (playerx-position[0][0]-0.1)*(tileX-position[0][0]-0.1)<0:
+					if (playerx-position[0][0]-0.1)*(tileX-position[0][0]+0.1)<0:
 						return False # Invalid move
 	
 
@@ -585,12 +588,12 @@ def validateMove(board,tileX,tileY,playerChance):
 					
 					if (playery-position[0][1])*(tileY-position[0][1]+0.1)<0:
 						return False
-				else:
-					if (playery-position[0][1]-0.1)*(tileY-position[0][1]-0.1)<0:
+				elif playery==position[0][1]:
+					if (playery-position[0][1]+0.1)*(tileY-position[0][1])<0:
 						return False
-	# print playerx,playery
-	# print tileX,tileY
-	# print TotalFence
+				else:
+					if (playery-position[0][1]-0.1)*(tileY-position[0][1]+0.1)<0:
+						return False
 	return True
 
 
