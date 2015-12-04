@@ -15,3 +15,8 @@ To make game interesting each player is provided with 8 fences to make opponent'
 * If there is a fence any player cannot move the car over it.  
 * When two cars come face to face, one car can jump over the other in its turn ,also the car can jump to the left or right of the opponent's car,provided there is no fence in the middle.  
 * The car that reaches first on the square having the finish flag of it's color, is declared as the winner.
+
+##Screenshots
+![Screenshot01](screenshots/screenshot01.png)
+![Screenshot02](screenshots/screenshot02.png)
+![Winning Moment](screenshots/screenshot03.png)
