@@ -69,6 +69,8 @@ JRIGHTDOWN='jumprightdown'
 
 carImg=pygame.image.load('car_11.png')
 carImg1=pygame.image.load('car_22.png')
+flagImg=pygame.image.load('blue2.jpg')
+flagImg1=pygame.image.load('red2.jpg')
 
 FENCELIMIT=8 # The maximum numbr of fences a player can use
 
@@ -274,6 +276,19 @@ def drawTile(tileX,tileY,number,adjx=0,adjy=0):
 	# pixels over determined by adjx and adjy
 	left,top=getLeftTopOfTile(tileX,tileY)
 	pygame.draw.rect(DISPLAYSURF,TILECOLOR,(left+adjx,top+adjy,TILESIZE,TILESIZE))
+	if tileX==3 and tileY==0:
+		textSurf=BASICFONT.render(str(number),True,TEXTCOLOR)
+		textRect=textSurf.get_rect()
+		adjy=11; adjx=15;
+		textRect.center=left+adjx,top+adjy
+		DISPLAYSURF.blit(flagImg1,textRect)
+	if tileX==3 and tileY==BOARDHEIGHT-1:
+		textSurf=BASICFONT.render(str(number),True,TEXTCOLOR)
+		textRect=textSurf.get_rect()
+		adjy=35; adjx=20;
+		textRect.center=left+adjx,top+adjy
+		DISPLAYSURF.blit(flagImg,textRect)
+
 	if number==2 or number==1:
 		
 		textSurf=BASICFONT.render(str(number),True,TEXTCOLOR)
@@ -409,8 +424,27 @@ def moveAnimation(board,direction,number,message='',jx=0,jy=0):
 	drawBoard(board,message)
 	baseSurf=DISPLAYSURF.copy() 
 	# Drawing a base surface for temporary movement
-	moveLeft,moveTop=getLeftTopOfTile(playerx,playery)
-	pygame.draw.rect(baseSurf,TILECOLOR,(moveLeft,moveTop,TILESIZE-2,TILESIZE-4))
+	if playerx==3 and playery==0:
+		textSurf=BASICFONT.render(str(number),True,TEXTCOLOR)
+		textRect=textSurf.get_rect()
+		adjy=11; adjx=15;
+		moveLeft,moveTop=getLeftTopOfTile(playerx,playery)
+		textRect.center=moveLeft+adjx,moveTop+adjy
+		pygame.draw.rect(baseSurf,TILECOLOR,(moveLeft,moveTop,TILESIZE-2,TILESIZE-4))
+		baseSurf.blit(flagImg1,textRect)
+	elif playerx==3 and playery==BOARDHEIGHT-1:
+		textSurf=BASICFONT.render(str(number),True,TEXTCOLOR)
+		textRect=textSurf.get_rect()
+		adjy=35; adjx=20;
+		moveLeft,moveTop=getLeftTopOfTile(playerx,playery)
+		textRect.center=moveLeft+adjx,moveTop+adjy
+		pygame.draw.rect(baseSurf,TILECOLOR,(moveLeft,moveTop,TILESIZE-2,TILESIZE-3))
+		baseSurf.blit(flagImg,textRect)
+	else:
+		moveLeft,moveTop=getLeftTopOfTile(playerx,playery)
+		pygame.draw.rect(baseSurf,TILECOLOR,(moveLeft,moveTop,TILESIZE-2,TILESIZE-4))
+
+
 	# checking for jump conditions
 	if direction==JUPUP:
 		moveAnimation(board,UP,number)
@@ -685,12 +719,6 @@ def validateFence(board,playerChance,startx,starty):
 
 
 
-
-	
-
-
-# bugs 
-# invalid fence
 
 
 
