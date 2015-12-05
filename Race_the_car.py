@@ -442,7 +442,7 @@ def moveAnimation(board,direction,number,message='',jx=0,jy=0):
 		baseSurf.blit(flagImg,textRect)
 	else:
 		moveLeft,moveTop=getLeftTopOfTile(playerx,playery)
-		pygame.draw.rect(baseSurf,TILECOLOR,(moveLeft,moveTop,TILESIZE-2,TILESIZE-4))
+		pygame.draw.rect(baseSurf,TILECOLOR,(moveLeft+4,moveTop+4,TILESIZE-7,TILESIZE-7))
 
 
 	# checking for jump conditions
