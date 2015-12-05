@@ -1,2 +1,3 @@
 include *.txt
-recursive-include RacetheCar/*.py *.txt
+include README.md
+recursive-include RacetheCar/*.py *.txt *.png *.jpg
