@@ -541,38 +541,37 @@ def fencePutting(tileX,tileY,playerChance,mousex,mousey):
 	left,top=getLeftTopOfTile(tileX,tileY)
 	Ox,Oy=getLeftTopOfTile(0,0)
 	flag=0   # fence not on the border of the board then only append else return false
-	if mousex>mousey and mousex+mousey<(top+left+TILESIZE) and top!=Oy:
-		flag=1
-	if mousex>mousey and mousex+mousey>(top+left+TILESIZE) and left<Ox+6*TILESIZE:
-		flag=1
-	if mousex<mousey and mousex+mousey<(top+left+TILESIZE) and left!=Ox:
-		flag=1
-	if mousex<mousey and mousex+mousey>(top+left+TILESIZE) and top<Oy+6*TILESIZE:
-		flag=1
-
 	if mousex>mousey and mousex+mousey<(top+left+TILESIZE):
-		if left<=Ox+6*TILESIZE and top!=Oy:
+		if left<=Ox+6*TILESIZE and top!=Oy and fenceLine(tileX,tileY,tileX+2,tileY):
 			TotalFence.append(((tileX,tileY),(tileX+2,tileY)))
-		elif left>Ox+6*TILESIZE and top!=Oy:
+			flag=1
+		elif left>Ox+6*TILESIZE and top!=Oy  and fenceLine(5,tileY,5+2,tileY):
 			TotalFence.append(((5,tileY),(7,tileY)))
+			flag=1
 
 	elif mousex>mousey and mousex+mousey>(top+left+TILESIZE):
-		if top<=Oy+6*TILESIZE and left<Ox+6*TILESIZE:
+		if top<=Oy+6*TILESIZE and left<Ox+6*TILESIZE  and fenceLine(tileX+1,tileY,tileX+1,tileY+2):
 			TotalFence.append(((tileX+1,tileY),(tileX+1,tileY+2)))
-		elif top>Oy+6*TILESIZE and left<Ox+6*TILESIZE:
+			flag=1
+		elif top>Oy+6*TILESIZE and left<Ox+6*TILESIZE  and fenceLine(tileX+1,5,tileX+1,5+2):
 			TotalFence.append(((tileX+1,5),(tileX+1,7)))
+			flag=1
 
 	elif mousex<mousey and mousex+mousey<(top+left+TILESIZE):
-		if top<=Oy+6*TILESIZE and left!=Ox:
+		if top<=Oy+6*TILESIZE and left!=Ox and fenceLine(tileX,tileY,tileX,tileY+2):
 			TotalFence.append(((tileX,tileY),(tileX,tileY+2)))
-		elif top>Oy+6*TILESIZE and left!=Ox:
+			flag=1
+		elif top>Oy+6*TILESIZE and left!=Ox and fenceLine(tileX,5,tileX,5+2):
 			TotalFence.append(((tileX,5),(tileX,5+2)))
+			flag=1
 
 	elif mousex<mousey and mousex+mousey>(top+left+TILESIZE):
-		if left<=Ox+6*TILESIZE and top<Oy+6*TILESIZE:
+		if left<=Ox+6*TILESIZE and top<Oy+6*TILESIZE and fenceLine(tileX,tileY+1,tileX+2,tileY+1):
 			TotalFence.append(((tileX,tileY+1),(tileX+2,tileY+1)))
-		elif left>Ox+6*TILESIZE and top<Oy+6*TILESIZE:
+			flag=1
+		elif left>Ox+6*TILESIZE and top<Oy+6*TILESIZE and fenceLine(5,tileY+1,5+2,tileY+1):
 			TotalFence.append(((5,tileY+1),(7,tileY+1)))
+			flag=1
 	if playerChance==1 and flag==1:
 		player1Fence.append(((tileX,tileY),(mousex,mousey)))
 		return True
@@ -712,6 +711,16 @@ def validateFence(board,playerChance,startx,starty):
 				s=s+[(current[0],current[1]+1)]	
 	return False
 
+def fenceLine(xi,yi,xf,yf):
+	# function to check if fence has been put on the valid space or not
+	for fence in TotalFence:
+			if (fence[0][0]+fence[1][0])==(xi+xf) and (fence[0][1]+fence[1][1])==(yi+yf):# is not the same fence
+				return False
+			if (fence[0][0]==fence[1][0]) and xi==xf and (xi==(fence[0][0]+fence[1][0])/2 or xf==(fence[0][0]+fence[1][0])/2 ):
+				return False # does not pass through midpoint horizontally
+			if (fence[0][1]==fence[1][1]) and yi==yf and (yi==(fence[0][1]+fence[1][1])/2 or yf==(fence[0][1]+fence[1][1])/2 ):
+				return False # does not pass through midpoint vertically
+	return True
 
 
 
