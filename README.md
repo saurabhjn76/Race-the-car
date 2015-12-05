@@ -3,7 +3,7 @@ An exciting strategy board game created on python,as a part of learning project.
 More like a shorter version of chess, where one needs to stay focussed ,anticipate the other player moves and cover all the tracks.
 
 ##Objective
-In this game two players need to reach the desired desitation(the finish flag of respective colors), the one reaching first will win the game.
+In this game two players need to reach the desired destination(the finish flag of respective colors), the one reaching first will win the game.
 
 ##Twist
 To make game interesting each player is provided with 8 fences to make opponent's path difficult.
