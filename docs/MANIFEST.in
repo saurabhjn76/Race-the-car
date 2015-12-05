@@ -1,2 +1,2 @@
 include *.txt
-recursive-include RacetheCar/*.py
+recursive-include RacetheCar/*.py *.txt
