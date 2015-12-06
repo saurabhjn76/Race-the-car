@@ -36,7 +36,7 @@ BGCOLOR=DARKTURQUIOSE
 TILECOLOR=GREEN
 TEXTCOLOR=WHITE
 BOARDCOLOR=NAVYBLUE
-BASICFONTSIZE=20
+BASICFONTSIZE=30
 BORDERCOLOR=BLACK
 HIGHLIGHTCOLOR=BLUE
 LIGHTBGCOLOR=BRIGHTBLUE
@@ -88,7 +88,7 @@ def main():
 	playerChance=1 #chance of the player by default=1
 	DISPLAYSURF=pygame.display.set_mode((WINDOWWIDTH,WINDOWHEIGHT))
 	pygame.display.set_caption('Race the Car')
-	BASICFONT=pygame.font.Font('freesansbold.ttf',BASICFONTSIZE)
+	BASICFONT=pygame.font.SysFont('comicsansms',BASICFONTSIZE)
 	textSurfaceObj=BASICFONT.render("Race the car....",True,BLACK,WHITE)
 	textRectObj=textSurfaceObj.get_rect()
 	textRectObj.center=(450,10)
