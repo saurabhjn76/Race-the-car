@@ -716,9 +716,10 @@ def fenceLine(xi,yi,xf,yf):
 	for fence in TotalFence:
 			if (fence[0][0]+fence[1][0])==(xi+xf) and (fence[0][1]+fence[1][1])==(yi+yf):# is not the same fence
 				return False
-			if (fence[0][0]==fence[1][0]) and xi==xf and ((yi==fence[0][1]-1 and yf==fence[1][1]-1) or (yi==fence[0][1]+1 and yf==fence[1][1]+1)):
+			if (fence[0][0]==fence[1][0]) and xi==xf and xi==fence[0][0] and ((yi==fence[0][1]-1 and yf==fence[1][1]-1) or (yi==fence[0][1]+1 and yf==fence[1][1]+1)):
+				#print (xi,xf,yi,yf," ",fence[0][0],fence[0][1],fence[1][0],fence[1][1])
 				return False
-			if (fence[0][1]==fence[1][1]) and yi==yf and ((xi==fence[0][0]-1 and xf==fence[1][0]-1) or (xi==fence[0][0]+1 and xf==fence[1][0]+1)):
+			if (fence[0][1]==fence[1][1]) and yi==yf and yi==fence[0][1] and  ((xi==fence[0][0]-1 and xf==fence[1][0]-1) or (xi==fence[0][0]+1 and xf==fence[1][0]+1)):
 				return False
 	return True
 
