@@ -18,6 +18,7 @@ BLANK=None
 GRAY    = (100, 100, 100)
 NAVYBLUE= ( 60, 60, 100)
 WHITE   = (255, 255, 255)
+DARKGREEN=(0,   155,  0)
 RED     = (255,  0,   0)
 GREEN   = (0  ,190,0)
 BLUE    = (0,    0 , 235)
@@ -27,6 +28,7 @@ PURPLE  = (255,0, 255)
 CYAN    = ( 0, 255, 255)
 DARKTURQUIOSE=(3,54,73)
 BRIGHTBLUE=(0,50,255)
+DARKGRAY=(40,  40,  40)
 BLACK=(0,0,0)
 
 
@@ -98,8 +100,10 @@ def main():
 	MOVE_SURF,MOVE_RECT =makeText('MOVE',BUTTONTEXTCOLOR,BUTTONCOLOR,WINDOWWIDTH-120,WINDOWHEIGHT-410)
 	checkForQuit()
 	fenceClicked=False
+	(spotx,spoty)=(None,None)
 	moveClicked=False
 	slideTo=None # the direction to which any slide should slide
+	showStartScreen()
 	while True:
 		msg='Player turn-> ' + str(playerChance) 
 		mouseClicked=False
@@ -722,15 +726,45 @@ def fenceLine(xi,yi,xf,yf):
 			if (fence[0][1]==fence[1][1]) and yi==yf and yi==fence[0][1] and  ((xi==fence[0][0]-1 and xf==fence[1][0]-1) or (xi==fence[0][0]+1 and xf==fence[1][0]+1)):
 				return False
 	return True
+def showStartScreen():
+	BASICFONT=pygame.font.SysFont('comicsansms',BASICFONTSIZE)
+	titleSurf1 = BASICFONT.render('Let the race begin...', True, WHITE, DARKGREEN)
+	titleSurf2 = BASICFONT.render('Let the race begin..', True, GREEN)
+	degrees1 = 0
+	degrees2 = 0
+	while True:
+		DISPLAYSURF.fill(BGCOLOR)
+		rotatedSurf1 = pygame.transform.rotate(titleSurf1, degrees1)
+		rotatedRect1 = rotatedSurf1.get_rect()
+		rotatedRect1.center = (WINDOWWIDTH / 2, WINDOWHEIGHT / 2)
+		DISPLAYSURF.blit(rotatedSurf1, rotatedRect1)
+		rotatedSurf2 = pygame.transform.rotate(titleSurf2, degrees2)
+		rotatedRect2 = rotatedSurf2.get_rect()
+		rotatedRect2.center = (WINDOWWIDTH / 2, WINDOWHEIGHT / 2)
+		DISPLAYSURF.blit(rotatedSurf2, rotatedRect2)
+		drawPressKeyMsg()
+		if checkForKeyPress():
+			pygame.event.get() # clear event queue
+			return
+		pygame.display.update()
+		FPSCLOCK.tick(FPS)
+		degrees1 += 3 # rotate by 3 degrees each frame
+		degrees2 += 7 # rotate by 7 degrees each frame
 
-
-
-
-
-
-
-
-
+def drawPressKeyMsg():
+	pressKeySurf = BASICFONT.render('Press a key to play.', True,DARKGRAY)
+	pressKeyRect = pressKeySurf.get_rect()
+	pressKeyRect.topleft = (WINDOWWIDTH - 200, WINDOWHEIGHT - 30)
+	DISPLAYSURF.blit(pressKeySurf, pressKeyRect)
+def checkForKeyPress():
+ if len(pygame.event.get(QUIT)) > 0:
+ 	terminate()
+ keyUpEvents = pygame.event.get(KEYUP)
+ if len(keyUpEvents) == 0:
+ 	return None
+ if keyUpEvents[0].key == K_ESCAPE:
+ 	terminate()
+ return keyUpEvents[0].key
 
 if __name__=='__main__':
 	main()
