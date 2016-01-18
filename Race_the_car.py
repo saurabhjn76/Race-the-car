@@ -73,6 +73,7 @@ carImg=pygame.image.load('car_11.png')
 carImg1=pygame.image.load('car_22.png')
 flagImg=pygame.image.load('blue2.jpg')
 flagImg1=pygame.image.load('red2.jpg')
+hmImg1=pygame.image.load('hm2.jpg')
 
 FENCELIMIT=8 # The maximum numbr of fences a player can use
 
@@ -727,29 +728,30 @@ def fenceLine(xi,yi,xf,yf):
 				return False
 	return True
 def showStartScreen():
-	BASICFONT=pygame.font.SysFont('comicsansms',BASICFONTSIZE)
-	titleSurf1 = BASICFONT.render('Let the race begin...', True, WHITE, DARKGREEN)
-	titleSurf2 = BASICFONT.render('Let the race begin..', True, GREEN)
-	degrees1 = 0
-	degrees2 = 0
+	BASICFONT=pygame.font.SysFont('comicsansms',3*BASICFONTSIZE)
+	titleSurf1 = BASICFONT.render('Race The Car', True, WHITE)
+	#titleSurf2 = BASICFONT.render('Let the race begin..', True, GREEN)
+	#degrees1 = 0
+	#degrees2 = 0
 	while True:
 		DISPLAYSURF.fill(BGCOLOR)
-		rotatedSurf1 = pygame.transform.rotate(titleSurf1, degrees1)
-		rotatedRect1 = rotatedSurf1.get_rect()
-		rotatedRect1.center = (WINDOWWIDTH / 2, WINDOWHEIGHT / 2)
-		DISPLAYSURF.blit(rotatedSurf1, rotatedRect1)
-		rotatedSurf2 = pygame.transform.rotate(titleSurf2, degrees2)
-		rotatedRect2 = rotatedSurf2.get_rect()
-		rotatedRect2.center = (WINDOWWIDTH / 2, WINDOWHEIGHT / 2)
-		DISPLAYSURF.blit(rotatedSurf2, rotatedRect2)
+		#rotatedSurf1 = pygame.transform.rotate(titleSurf1, degrees1)
+		#rotatedRect1 = rotatedSurf1.get_rect(6
+		#rotatedRect1.center = (WINDOWWIDTH / 2, WINDOWHEIGHT / 4)
+		DISPLAYSURF.blit(hmImg1,DISPLAYSURF.get_rect())
+		DISPLAYSURF.blit(titleSurf1, (WINDOWWIDTH / 3.4, WINDOWHEIGHT / 20))
+		# rotatedSurf2 = pygame.transform.rotate(titleSurf2, degrees2)
+		# rotatedRect2 = rotatedSurf2.get_rect()
+		# rotatedRect2.center = (WINDOWWIDTH / 2, WINDOWHEIGHT / 3)
+		# DISPLAYSURF.blit(rotatedSurf2, rotatedRect2)
 		drawPressKeyMsg()
 		if checkForKeyPress():
 			pygame.event.get() # clear event queue
 			return
 		pygame.display.update()
 		FPSCLOCK.tick(FPS)
-		degrees1 += 3 # rotate by 3 degrees each frame
-		degrees2 += 7 # rotate by 7 degrees each frame
+		#degrees1 += 3 # rotate by 3 degrees each frame
+		#degrees2 += 7 # rotate by 7 degrees each frame
 
 def drawPressKeyMsg():
 	pressKeySurf = BASICFONT.render('Press a key to play.', True,DARKGRAY)
