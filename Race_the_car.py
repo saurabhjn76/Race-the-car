@@ -729,7 +729,9 @@ def fenceLine(xi,yi,xf,yf):
 	return True
 def showStartScreen():
 	BASICFONT=pygame.font.SysFont('comicsansms',3*BASICFONTSIZE)
+	OPTIONFONT=pygame.font.SysFont('comicsansms',2*BASICFONTSIZE)
 	titleSurf1 = BASICFONT.render('Race The Car', True, WHITE)
+	titleSurf2 = OPTIONFONT.render('RaceON', True,WHITE)
 	#titleSurf2 = BASICFONT.render('Let the race begin..', True, GREEN)
 	#degrees1 = 0
 	#degrees2 = 0
@@ -740,6 +742,7 @@ def showStartScreen():
 		#rotatedRect1.center = (WINDOWWIDTH / 2, WINDOWHEIGHT / 4)
 		DISPLAYSURF.blit(hmImg1,DISPLAYSURF.get_rect())
 		DISPLAYSURF.blit(titleSurf1, (WINDOWWIDTH / 3.4, WINDOWHEIGHT / 20))
+		DISPLAYSURF.blit(titleSurf2, (WINDOWWIDTH / 1.4, WINDOWHEIGHT / 2))
 		# rotatedSurf2 = pygame.transform.rotate(titleSurf2, degrees2)
 		# rotatedRect2 = rotatedSurf2.get_rect()
 		# rotatedRect2.center = (WINDOWWIDTH / 2, WINDOWHEIGHT / 3)
