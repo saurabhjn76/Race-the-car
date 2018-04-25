@@ -1,0 +1,3 @@
+cx_Freeze==6.0b1
+numpy==1.13.3
+pygame==1.9.3
