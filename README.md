@@ -56,3 +56,6 @@ To make the game interesting each player is provided with 8 fences to make the o
 ![Screenshot01](screenshots/screenshot01.png)
 ![Screenshot02](screenshots/screenshot02.png)
 ![Winning Moment](screenshots/screenshot03.png)
+
+## Unit testing
+Testing with pytest version 3.9.1

@@ -7,6 +7,15 @@ player1Fence = []  # records the position of the fences by player1
 player2Fence = []  # records the position of the fences by player2
 TotalFence = []  # recors the co-ordinates of all fences
 
+# Board space ID's
+PLAYER_ONE = 1
+PLAYER_TWO = 2
+OPEN_SPACE = 3
+
+# Board positions
+BOARDWIDTH_CENTER = BOARDWIDTH - int(BOARDWIDTH/2) - 1
+ONE_STARTING_ROW = BOARDHEIGHT - 1
+TWO_STARTING_ROW = 0
 
 def main():
     global FPSCLOCK, DISPLAYSURF, BASICFONT, FENCE_SURF, FENCE_RECT, MOVE_SURF, MOVE_RECT, SOLVE_SURF, SOLVE_RECT
@@ -195,7 +204,7 @@ def getLeftTopOfTile(tileX, tileY):
     return (left, top)
 
 
-def getStartingBoard(state=3):
+def getStartingBoard(state=OPEN_SPACE):
     # Returns the board data structure with tiles in it
 
     board = []
@@ -204,8 +213,8 @@ def getStartingBoard(state=3):
         for y in range(BOARDHEIGHT):
             column.append(state)
         board.append(column)
-    board[BOARDWIDTH - int(BOARDWIDTH / 2) - 1][0] = 2
-    board[BOARDWIDTH - int(BOARDWIDTH / 2) - 1][BOARDHEIGHT - 1] = 1
+    board[BOARDWIDTH_CENTER][ONE_STARTING_ROW] = PLAYER_ONE
+    board[BOARDWIDTH_CENTER][TWO_STARTING_ROW] = PLAYER_TWO
     return board
 
 
