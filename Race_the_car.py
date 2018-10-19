@@ -1,79 +1,7 @@
 import sys, pygame
 from pygame.locals import *
 
-BOARDHEIGHT = 7
-BOARDWIDTH = 7
-TILESIZE = 92
-WINDOWWIDTH = 900
-WINDOWHEIGHT = 720
-FENCEHEIGHT = 5
-FENCEWIDTH = 2 * (TILESIZE - 2)
-FPS = 20
-ANIMATIONSPEED = 6
-BLANK = None
-
-
-# set of colors
-#            R   G    B
-GRAY = (100, 100, 100)
-NAVYBLUE = (60, 60, 100)
-WHITE = (255, 255, 255)
-DARKGREEN = (0, 155, 0)
-RED = (255, 0, 0)
-GREEN = (0, 190, 0)
-BLUE = (0, 0, 235)
-YELLOW = (255, 255, 0)
-ORANGE = (255, 128, 0)
-PURPLE = (255, 0, 255)
-CYAN = (0, 255, 255)
-DARKTURQUIOSE = (3, 54, 73)
-BRIGHTBLUE = (0, 50, 255)
-DARKGRAY = (40, 40, 40)
-BLACK = (0, 0, 0)
-
-
-BGCOLOR = DARKTURQUIOSE
-TILECOLOR = GREEN
-TEXTCOLOR = WHITE
-BOARDCOLOR = NAVYBLUE
-BASICFONTSIZE = 30
-BORDERCOLOR = BLACK
-HIGHLIGHTCOLOR = BLUE
-LIGHTBGCOLOR = BRIGHTBLUE
-
-BUTTONTEXTCOLOR = BLACK
-BUTTONCOLOR = WHITE
-MESSAGECOLOR = WHITE
-
-
-XMARGIN = int((WINDOWWIDTH - (TILESIZE * BOARDWIDTH + (BOARDWIDTH - 1))) / 2)
-YMARGIN = int((WINDOWHEIGHT - (TILESIZE * BOARDHEIGHT - (BOARDHEIGHT - 1))) / 2)
-
-
-UP = "up"
-DOWN = "down"
-LEFT = "left"
-RIGHT = "right"
-JUPUP = "jumpupup"
-JUPLEFT = "jumpupleft"
-JUPRIGHT = "jumpupright"
-JDOWNDOWN = "jumpdowndown"
-JDOWNLEFT = "jumpdownleft"
-JDOWNRIGHT = "jumpdownright"
-JLEFTLEFT = "jumpleftleft"
-JLEFTUP = "jumpleftup"
-JLEFTDOWN = "jumpleftdown"
-JRIGHTRIGHT = "jumprightright"
-JRIGHTUP = "jumprightup"
-JRIGHTDOWN = "jumprightdown"
-
-carImg = pygame.image.load("car_11.png")
-carImg1 = pygame.image.load("car_22.png")
-flagImg = pygame.image.load("blue2.jpg")
-flagImg1 = pygame.image.load("red2.jpg")
-hmImg1 = pygame.image.load("hm2.jpg")
-
-FENCELIMIT = 8  # The maximum numbr of fences a player can use
+from constants import *
 
 player1Fence = []  # records the position of the fences by player1
 player2Fence = []  # records the position of the fences by player2
@@ -141,9 +69,9 @@ def main():
                 onumber = 2
             else:
                 onumber = 1
-            oplayerx, oplayery = getPlayerPosition(mainBoard, onumber)
+            opp_playerx, opp_playery = getPlayerPosition(mainBoard, onumber)
 
-            if spotx != oplayerx or spoty != oplayery:
+            if spotx != opp_playerx or spoty != opp_playery:
                 if spotx == playerx + 1 and spoty == playery:
                     slideTo = LEFT
                 elif spotx == playerx - 1 and spoty == playery:
@@ -153,7 +81,12 @@ def main():
                 elif spotx == playerx and spoty == playery + 1:
                     slideTo = UP
 
-            if oplayerx == playerx + 1 and oplayery == playery:
+            '''
+            The below logic uses the opposing player's position
+            and the current player's position to figure out
+            which direction the car should jump
+            '''
+            if opp_playerx == playerx + 1 and opp_playery == playery:
                 if spotx == playerx + 2 and spoty == playery:
                     slideTo = JLEFTLEFT
                 if spotx == playerx + 1 and spoty == playery - 1:
@@ -161,7 +94,7 @@ def main():
                 if spotx == playerx + 1 and spoty == playery + 1:
                     slideTo = JLEFTUP
 
-            elif oplayerx == playerx - 1 and oplayery == playery:
+            elif opp_playerx == playerx - 1 and opp_playery == playery:
                 if spotx == playerx - 2 and spoty == playery:
                     slideTo = JRIGHTRIGHT
                 if spotx == playerx - 1 and spoty == playery - 1:
@@ -169,7 +102,7 @@ def main():
                 if spotx == playerx - 1 and spoty == playery + 1:
                     slideTo = JRIGHTUP
 
-            elif oplayerx == playerx and oplayery == playery - 1:
+            elif opp_playerx == playerx and opp_playery == playery - 1:
                 if spotx == playerx and spoty == playery - 2:
                     slideTo = JDOWNDOWN
                 if spoty == playery - 1 and spotx == playerx - 1:
@@ -177,7 +110,7 @@ def main():
                 if spoty == playery - 1 and spotx == playerx + 1:
                     slideTo = JDOWNLEFT
 
-            elif oplayerx == playerx and oplayery == playery + 1:
+            elif opp_playerx == playerx and opp_playery == playery + 1:
                 if spotx == playerx and spoty == playery + 2:
                     slideTo = JUPUP
                 if spoty == playery + 1 and spotx == playerx - 1:
@@ -201,11 +134,8 @@ def main():
                         if fencePutting(spotx, spoty, playerChance, mousex, mousey):
                             if validateFence(
                                 mainBoard, playerChance, playerx, playery
-                            ) and validateFence(mainBoard, onumber, oplayerx, oplayery):
-                                if playerChance == 1:
-                                    playerChance = 2
-                                elif playerChance == 2:
-                                    playerChance = 1
+                            ) and validateFence(mainBoard, onumber, opp_playerx, opp_playery):
+                                playerChance = 2 if playerChance == 1 else 1
                                 fenceClicked = False
                             else:
                                 hasWon(mainBoard, onumber)
@@ -790,7 +720,7 @@ def validateMove(board, tileX, tileY, playerChance, direction, playerx=-1, playe
             onumber = 2
         else:
             onumber = 1
-        oplayerx, oplayery = getPlayerPosition(board, onumber)
+        opp_playerx, opp_playery = getPlayerPosition(board, onumber)
     for position in TotalFence:
         if position[0][0] == position[1][0]:
             # equation x-position[0][0]
