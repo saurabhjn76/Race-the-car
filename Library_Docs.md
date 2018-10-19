@@ -20,3 +20,4 @@ The link for documentation of the library is given [here](https://cx-freeze.read
 [Wikipedia](https://en.wikipedia.org)  
 [NumPy](http://www.numpy.org)  
 [Pygame](https://www.pygame.org)
+[cx_Freeze](https://cx-freeze.readthedocs.io/en/latest/)
